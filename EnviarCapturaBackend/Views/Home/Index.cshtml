@@ -1,0 +1,59 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+
+<br />
+<div class="row">
+    <div id="div_exportar" style="border:solid 1px;">
+
+        <div>Nombre: Ezequiel</div>
+        <div>Edad: 33</div>
+
+    </div>
+</div>
+<br />
+<button onclick="javascript: capturar();">Mandar div al backend</button>
+
+
+<br />
+<button onclick="javascript: descargar();">Descargar div</button>
+
+<br />
+
+
+
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
+
+<script>
+
+    function descargar() {    
+
+         html2canvas(document.querySelector('#div_exportar')).then(function (canvas) {
+
+            var img = canvas.toDataURL("image/png");
+            document.write('<img src="' + img + '"/>');
+         });
+    }
+
+
+    function capturar() {
+        html2canvas(document.querySelector('#div_exportar')).then(function (canvas) {
+            $.ajax({
+                type: 'POST',
+                url: "/Home/RecibirFoto",
+                data: '{ "imageData" : "' + canvas.toDataURL("image/jpeg").split(';base64,')[1] + '" }',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (msg) {
+                    alert('Image saved successfully !');
+                },
+                error: function (e) {
+                    alert(e);
+                }
+            });
+        });
+    }
+
+
+</script>
